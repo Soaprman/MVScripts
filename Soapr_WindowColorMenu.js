@@ -35,6 +35,7 @@ Soapr.WindowColorMenu.Consts.Strings.GreenHelp = 'Higher number = more green';
 Soapr.WindowColorMenu.Consts.Strings.BlueHelp = 'Higher number = more blue';
 Soapr.WindowColorMenu.Consts.Strings.AlphaHelp = 'Higher number = more opaque';
 Soapr.WindowColorMenu.Consts.Strings.Finish = 'Finished!';
+Soapr.WindowColorMenu.Consts.Strings.FinishHelp = 'Exit this menu';
 
 //=============================================================================
 // ConfigManager
@@ -155,11 +156,14 @@ Window_WindowColor.prototype.drawItem = function (index) {
     this.resetTextColor();
     this.changePaintOpacity(this.isCommandEnabled(index));
     this.drawText(this.commandName(index), rect.x, rect.y, itemNameWidth, 'left');
+    if (0 <= index && index <= 3) {
+        this.drawGauge(itemNameWidth, rect.y, itemValueWidth, this.itemValueText(index) / 255, this.textColor(6), this.textColor(14));
+    }
     this.drawText(this.itemValueText(index), itemNameWidth, rect.y, itemValueWidth, 'right');
 };
 
 Window_WindowColor.prototype.itemNameWidth = function () {
-    return 200;
+    return 300;
 };
 
 Window_WindowColor.prototype.itemValueText = function (index) {
@@ -230,6 +234,9 @@ Window_WindowColor.prototype.updateHelp = function () {
             break;
         case 3:
             this._helpWindow.setText(Soapr.WindowColorMenu.Consts.Strings.AlphaHelp);
+            break;
+        case 4:
+            this._helpWindow.setText(Soapr.WindowColorMenu.Consts.Strings.FinishHelp);
             break;
         default:
             this._helpWindow.clear();
