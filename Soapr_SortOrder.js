@@ -63,8 +63,8 @@ DataManager.processSortOrderNotetags = function (group) {
 //=============================================================================
 
 Soapr.SortOrder.sort = function (a, b) {
-    var aVal = a.sortOrder || a.id;
-    var bVal = b.sortOrder || b.id;
+    var aVal = a ? (a.sortOrder || a.id) : 0;
+    var bVal = b ? (b.sortOrder || b.id) : 0;
     return aVal - bVal;
 };
 
@@ -74,17 +74,25 @@ Window_ItemList.prototype.makeItemList = function () {
     this._data.sort(Soapr.SortOrder.sort);
 };
 
-Soapr.SortOrder.Window_SkillList_makeItemList = Window_SkillList.prototype.makeItemList;
-Window_SkillList.prototype.makeItemList = function () {
-    Soapr.SortOrder.Window_SkillList_makeItemList.call(this);
-    this._data.sort(Soapr.SortOrder.sort);
-};
-
 Soapr.SortOrder.Window_ShopBuy_makeItemList = Window_ShopBuy.prototype.makeItemList;
 Window_ShopBuy.prototype.makeItemList = function () {
     Soapr.SortOrder.Window_ShopBuy_makeItemList.call(this);
     this._data.sort(Soapr.SortOrder.sort);
 };
+
+if (Imported.YEP_EquipBattleSkills) {
+    Soapr.SortOrder.Window_SkillEquip_makeItemList = Window_SkillEquip.prototype.makeItemList;
+    Window_SkillEquip.prototype.makeItemList = function () {
+        Soapr.SortOrder.Window_SkillEquip_makeItemList.call(this);
+        this._data.sort(Soapr.SortOrder.sort);
+    };
+} else {
+    Soapr.SortOrder.Window_SkillList_makeItemList = Window_SkillList.prototype.makeItemList;
+    Window_SkillList.prototype.makeItemList = function () {
+        Soapr.SortOrder.Window_SkillList_makeItemList.call(this);
+        this._data.sort(Soapr.SortOrder.sort);
+    };
+}
 
 if (Window_SkillLearn) {
     Soapr.SortOrder.Window_SkillLearn_makeItemList = Window_SkillLearn.prototype.makeItemList;

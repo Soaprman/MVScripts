@@ -58,7 +58,12 @@ ConfigManager.makeData = function () {
 Soapr.WindowColorMenu.ConfigManager_applyData = ConfigManager.applyData;
 ConfigManager.applyData = function (config) {
     Soapr.WindowColorMenu.ConfigManager_applyData.call(this, config);
-    this.windowColor = config.windowColor;
+    this.windowColor = config.windowColor || {
+        red: Soapr.WindowColorMenu.Consts.DefaultRed,
+        green: Soapr.WindowColorMenu.Consts.DefaultGreen,
+        blue: Soapr.WindowColorMenu.Consts.DefaultBlue,
+        alpha: Soapr.WindowColorMenu.Consts.DefaultAlpha
+    };
 };
 
 //=============================================================================
