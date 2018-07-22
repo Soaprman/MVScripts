@@ -12,13 +12,6 @@ Soapr.FilterBattleback = Soapr.FilterBattleback || {};
 * @help
 * Help? What do you think this is, a professional script?
 *
-* @param Disable World Type Battlebacking
-* @desc Prevent the assigning of battlebacks based on tile when using tilesets
-* set to "World Type".
-* OFF - false     ON - true
-* Default: ON
-* @default true
-*
 * Uses LinearBlurFilter by Petri Leskinen (modified by me to work in RPG Maker)
 * http://pixelero.wordpress.com/
 * http://www.petrileskinen.fi/html5/linearBlur/demo.html
@@ -27,37 +20,6 @@ Soapr.FilterBattleback = Soapr.FilterBattleback || {};
 * 
 */
 //=============================================================================
-
-Soapr.FilterBattleback.RawParams = PluginManager.parameters('Soapr_FilterBattleback');
-
-Soapr.FilterBattleback.DisableWorldTypeBattlebacking = JSON.parse(Soapr.FilterBattleback.RawParams['Disable World Type Battlebacking']);
-
-//=============================================================================
-// Disable World Type Battlebacking
-//=============================================================================
-
-// Replace the ones in rpg_sprites.js
-if (Soapr.FilterBattleback.DisableWorldTypeBattlebacking) {
-	Spriteset_Battle.prototype.battleback1Name = function () {
-		if (BattleManager.isBattleTest()) {
-			return $dataSystem.battleback1Name;
-		} else if ($gameMap.battleback1Name()) {
-			return $gameMap.battleback1Name();
-		} else {
-			return '';
-		}
-	};
-
-	Spriteset_Battle.prototype.battleback2Name = function () {
-		if (BattleManager.isBattleTest()) {
-			return $dataSystem.battleback2Name;
-		} else if ($gameMap.battleback2Name()) {
-			return $gameMap.battleback2Name();
-		} else {
-			return '';
-		}
-	};
-}
 
 //=============================================================================
 // Image manipulation
@@ -456,24 +418,27 @@ Spriteset_Battle.prototype.update = function () {
 	Soapr.FilterBattleback.WaveFrame += 1;
 	if (Soapr.FilterBattleback.WaveFrame > 59) Soapr.FilterBattleback.WaveFrame = 0;
 
-	this._backgroundSprite.bitmap.clear();
-	var context = this._backgroundSprite.bitmap._canvas.getContext('2d');
-	context.save();
-
-	// Draw BG
-	context.drawImage(Soapr.FilterBattleback.BlurredImage, 0, 0);
-	Soapr.FilterBattleback.UpdateWaviness(this._backgroundSprite.bitmap._canvas);
-
-	// Draw floor
-	var w = this._backgroundSprite.bitmap._canvas.width;
-	var h = this._backgroundSprite.bitmap._canvas.height;
-	context.globalAlpha = 0.25;
-	context.fillStyle = 'black';
-	//context.fillRect(0, 0, w, h);
-	context.beginPath();
-	context.ellipse(w / 2, 360, w * 0.45, 50, 0, 0, 2 * Math.PI);
-	context.fill();
-	context.restore();
+	// Halve framerate
+	if (Soapr.FilterBattleback.WaveFrame % 2 === 0) {
+		this._backgroundSprite.bitmap.clear();
+		var context = this._backgroundSprite.bitmap._canvas.getContext('2d');
+		context.save();
+	
+		// Draw BG
+		context.drawImage(Soapr.FilterBattleback.BlurredImage, 0, 0);
+		Soapr.FilterBattleback.UpdateWaviness(this._backgroundSprite.bitmap._canvas);
+	
+		// Draw floor
+		var w = this._backgroundSprite.bitmap._canvas.width;
+		var h = this._backgroundSprite.bitmap._canvas.height;
+		context.globalAlpha = 0.25;
+		context.fillStyle = 'black';
+		//context.fillRect(0, 0, w, h);
+		context.beginPath();
+		context.ellipse(w / 2, 360, w * 0.45, 50, 0, 0, 2 * Math.PI);
+		context.fill();
+		context.restore();
+	}
 
 	Soapr.FilterBattleback.Spriteset_Battle_update.call(this);
 };
