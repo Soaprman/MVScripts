@@ -227,7 +227,7 @@ Game_Battler.prototype.refresh = function () {
 		if (this._summoner && this._unsummonWhenDead) {
 			if (this.isActor()) {
 				this.hide();
-				this.recoverAll();
+				this.recoverAll(); // Prevents HP from being 0 on resummon
 				$gameParty.unsummonActor(this.actorId());
 			} else {
 				$gameTroop.removeEnemy(this);
